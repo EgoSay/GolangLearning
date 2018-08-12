@@ -33,3 +33,15 @@ func (node *Node) TraverseFunc(f func(node *Node)) {
 	node.Right.TraverseFunc(f)
 	f(node)
 }
+
+//利用channel遍历
+func (node *Node) TraverseWithChannel() chan *Node {
+	out := make(chan *Node)
+	go func() {
+		node.TraverseFunc(func(node *Node) {
+			out <- node
+		})
+		close(out)
+	}()
+	return out
+}

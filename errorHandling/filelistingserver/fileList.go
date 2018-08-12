@@ -7,11 +7,11 @@
 package main
 
 import (
-	"net/http"
-
 	"Learning/errorHandling/filelistingserver/handler"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"strings"
 )

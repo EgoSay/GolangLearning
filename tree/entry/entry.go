@@ -20,5 +20,14 @@ func main() {
 	root.TraverseFunc(func(node *tree.Node) {
 		nodeCount++
 	})
-	fmt.Println(nodeCount)
+	fmt.Println("Node count:", nodeCount)
+
+	c := root.TraverseWithChannel()
+	maxValue := 0
+	for node := range c {
+		if node.Value > maxValue {
+			maxValue = node.Value
+		}
+	}
+	fmt.Println("Max node value:", maxValue)
 }

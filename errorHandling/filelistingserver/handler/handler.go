@@ -16,9 +16,9 @@ type UserError interface {
 	Message() string
 }
 
-type fileHandler func(writer http.ResponseWriter, request *http.Request) error
+type FileHandler func(writer http.ResponseWriter, request *http.Request) error
 
-func ErrorWrapper(handler fileHandler) func(writer http.
+func ErrorWrapper(handler FileHandler) func(writer http.
 	ResponseWriter, request *http.Request) {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		defer func() {
@@ -49,6 +49,8 @@ func ErrorWrapper(handler fileHandler) func(writer http.
 			switch {
 			case os.IsNotExist(err):
 				code = http.StatusNotFound
+			case os.IsPermission(err):
+				code = http.StatusForbidden
 			default:
 				code = http.StatusInternalServerError
 			}
