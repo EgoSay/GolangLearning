@@ -2,9 +2,11 @@ package web
 
 import (
 	"encoding/json"
+	"github.com/gin-gonic/gin"
+	"go-starter/db"
+	"go-starter/web/routers"
 	"log"
 	"net/http"
-	"go-starter/db"
 )
 
 type App struct {
@@ -21,7 +23,7 @@ func NewApp(d db.DB, cors bool) App {
 	if !cors {
 		techHandler = disableCors(techHandler)
 	}
-	app.handlers["/api/technologies"] = techHandler
+	app.handlers["/apis/technologies"] = techHandler
 	app.handlers["/"] = http.FileServer(http.Dir("/webapp")).ServeHTTP
 	return app
 }
@@ -31,7 +33,19 @@ func (a *App) Serve() error {
 		http.Handle(path, handler)
 	}
 	log.Println("Web server is available on port 8080")
-	return http.ListenAndServe(":8080", nil)
+	//初始化
+	gin.SetMode(gin.ReleaseMode)
+	r := gin.New()
+
+	//基础配置
+	// InitGin(r)
+
+	//注册路由
+	routers.NewInner().Register(r)
+	routers.NewAdmin().Register(r)
+
+	//啟動服務
+	return http.ListenAndServe("0.0.0.0:9900", r)
 }
 
 func (a *App) GetTechnologies(w http.ResponseWriter, r *http.Request) {
