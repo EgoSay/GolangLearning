@@ -6,7 +6,7 @@
 package handler
 
 import (
-	"github.com/gpmgo/gopm/modules/log"
+	"log"
 	"net/http"
 	"os"
 )
